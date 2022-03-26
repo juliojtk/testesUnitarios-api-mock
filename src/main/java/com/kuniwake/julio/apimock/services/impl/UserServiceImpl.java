@@ -3,6 +3,7 @@ package com.kuniwake.julio.apimock.services.impl;
 import com.kuniwake.julio.apimock.domain.User;
 import com.kuniwake.julio.apimock.repositories.UserRepository;
 import com.kuniwake.julio.apimock.services.UserService;
+import com.kuniwake.julio.apimock.services.exceptions.CustomObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(Integer id) {
         Optional<User> user = userRepository.findById(id);
-        return user.orElse(null);
+        return user.orElseThrow(() -> new CustomObjectNotFoundException("Objeto não encontrado"));
     }
 }
