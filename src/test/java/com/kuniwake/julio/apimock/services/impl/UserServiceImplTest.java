@@ -3,6 +3,7 @@ package com.kuniwake.julio.apimock.services.impl;
 import com.kuniwake.julio.apimock.domain.User;
 import com.kuniwake.julio.apimock.domain.dto.UserDto;
 import com.kuniwake.julio.apimock.repositories.UserRepository;
+import com.kuniwake.julio.apimock.services.exceptions.MyObjectNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,7 +51,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void When_findById_Then_Return_UserInstance() {
+    void when_findById_then_return_userInstance() {
         Mockito.when(userRepository.findById(Mockito.anyInt())).thenReturn(optionalUser);
 
         User response = userService.findById(ID);
@@ -60,6 +61,18 @@ class UserServiceImplTest {
         assertEquals(ID, response.getId());
         assertEquals(NAME, response.getName());
         assertEquals(EMAIL, response.getEmail());
+    }
+
+    @Test
+    void when_findById_then_return_NotFoundException(){ // Quando buscar por Id, retornar NotFoundException
+        Mockito.when(userRepository.findById(Mockito.anyInt()))
+                .thenThrow(new MyObjectNotFoundException("Objeto não encontrado"));
+        try {
+            userService.findById(ID);
+        } catch (Exception ex){
+            Assertions.assertEquals(MyObjectNotFoundException.class, ex.getClass());
+            Assertions.assertEquals("Objeto não encontrado", ex.getMessage());
+        }
     }
 
     @Test
