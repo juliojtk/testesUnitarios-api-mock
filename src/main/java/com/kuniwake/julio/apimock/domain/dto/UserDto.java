@@ -2,9 +2,11 @@ package com.kuniwake.julio.apimock.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class UserDto {
 
     private Integer id;

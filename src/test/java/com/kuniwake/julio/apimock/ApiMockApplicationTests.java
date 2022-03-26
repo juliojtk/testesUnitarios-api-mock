@@ -7,7 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 class ApiMockApplicationTests {
 
     @Test
-    void contextLoads() {
+    void main() {
+        ApiMockApplication.main(new String[]{});
     }
 
 }
