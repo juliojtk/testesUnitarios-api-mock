@@ -1,6 +1,7 @@
 package com.kuniwake.julio.apimock.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
@@ -10,7 +11,7 @@ public class UserDto {
     private String name;
     private String email;
 
-    @JsonIgnore // Sera ignorado essa informação para visualização no Client
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // Sera ignorado essa informação apenas para visualização no Client
     private String password;
 
 }

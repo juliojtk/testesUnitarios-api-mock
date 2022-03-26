@@ -9,4 +9,6 @@ public interface UserService {
     User findById(Integer id);
 
     List<User> findAllUser();
+
+    User createUser(UserDto userDto);
 }
