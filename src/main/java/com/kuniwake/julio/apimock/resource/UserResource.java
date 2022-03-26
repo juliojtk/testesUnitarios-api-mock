@@ -18,13 +18,14 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/user")
 public class UserResource {
 
+    public static final String ID = "/{id}";
     @Autowired
     private ModelMapper mapper;
 
     @Autowired
     private UserService userService;
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = ID)
     public ResponseEntity<UserDto> findById(@PathVariable Integer id){
         return ResponseEntity.ok().body(mapper.map(userService.findById(id), UserDto.class));// mapper.map(), faz com que as informações do User seja informada no UserDto
     }
@@ -41,15 +42,21 @@ public class UserResource {
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto){
         User user = userService.createUser(userDto);
         URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{id}")
+                .fromCurrentRequest().path(ID)
                 .buildAndExpand(user.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
 
-    @PutMapping(value = "/{id}")
+    @PutMapping(value = ID)
     public ResponseEntity<UserDto> updateUser(@PathVariable Integer id, @RequestBody UserDto userDto){
         userDto.setId(id);
         User newUser = userService.updateUser(userDto);
         return ResponseEntity.ok().body(mapper.map(newUser, UserDto.class)); // Passa as informações de User para UserDto
+    }
+
+    @DeleteMapping(value = ID)
+    public ResponseEntity<UserDto> deleteUser(@PathVariable Integer id){
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }
