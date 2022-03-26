@@ -13,4 +13,6 @@ public interface UserService { // Classe que Faz 'Contratos'
     User createUser(UserDto userDto);
 
     User updateUser(UserDto userDto);
+
+    void deleteUser(Integer id);
 }

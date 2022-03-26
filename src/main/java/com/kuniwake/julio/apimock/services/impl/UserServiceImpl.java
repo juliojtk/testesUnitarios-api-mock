@@ -45,6 +45,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(mapper.map(userDto, User.class));
     }
 
+    @Override
+    public void deleteUser(Integer id) {
+        userRepository.delete(findById(id));
+    }
+
     private void findByEmail(UserDto userDto){
         Optional<User> optionalUser = userRepository.findByEmail(userDto.getEmail());
         if (optionalUser.isPresent() && !optionalUser.get().getId().equals(userDto.getId())){ // Tratamento de exception no DB
