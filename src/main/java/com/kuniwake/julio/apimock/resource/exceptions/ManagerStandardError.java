@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @AllArgsConstructor
-public class CustomStandardError {
+public class ManagerStandardError {
     private LocalDate timestamp;
     private Integer status;
     private String error;
