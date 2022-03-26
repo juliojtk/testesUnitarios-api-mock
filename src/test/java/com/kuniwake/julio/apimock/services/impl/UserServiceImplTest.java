@@ -30,6 +30,7 @@ class UserServiceImplTest {
     public static final String NAME = "julio";
     public static final String EMAIL = "julio@email.com";
     public static final String PASSWORD = "123";
+    public static final String OBJETO_NAO_ENCONTRADO = "Objeto não encontrado";
 
     @InjectMocks // Para criar uma instancia real de UserServiceImpl
     private UserServiceImpl userService;
@@ -66,17 +67,28 @@ class UserServiceImplTest {
     @Test
     void when_findById_then_return_NotFoundException(){ // Quando buscar por Id, retornar NotFoundException
         Mockito.when(userRepository.findById(Mockito.anyInt()))
-                .thenThrow(new MyObjectNotFoundException("Objeto não encontrado"));
+                .thenThrow(new MyObjectNotFoundException(OBJETO_NAO_ENCONTRADO));
         try {
             userService.findById(ID);
         } catch (Exception ex){
             Assertions.assertEquals(MyObjectNotFoundException.class, ex.getClass());
-            Assertions.assertEquals("Objeto não encontrado", ex.getMessage());
+            Assertions.assertEquals(OBJETO_NAO_ENCONTRADO, ex.getMessage());
         }
     }
 
     @Test
-    void findAllUser() {
+    void when_find_all_return_ListOfUser() {
+        Mockito.when(userRepository.findAll()).thenReturn(List.of(user));
+
+        List<User> response = userService.findAllUser();
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(1, response.size());// Asegurar que vai vim apenas uma lista
+        Assertions.assertEquals(User.class, response.get(0).getClass());// Assegurar que o objeto do index 0 dentro dessa lista tenha a classe do tipo User
+        Assertions.assertEquals(ID, response.get(0).getId());//Testando se o ID da da classe de index 0 é mesmo passado
+        Assertions.assertEquals(NAME, response.get(0).getName());
+        Assertions.assertEquals(EMAIL, response.get(0).getEmail());
+        Assertions.assertEquals(PASSWORD, response.get(0).getPassword());
     }
 
     @Test
