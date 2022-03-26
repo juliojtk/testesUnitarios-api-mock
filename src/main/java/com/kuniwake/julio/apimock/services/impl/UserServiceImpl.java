@@ -4,7 +4,8 @@ import com.kuniwake.julio.apimock.domain.User;
 import com.kuniwake.julio.apimock.domain.dto.UserDto;
 import com.kuniwake.julio.apimock.repositories.UserRepository;
 import com.kuniwake.julio.apimock.services.UserService;
-import com.kuniwake.julio.apimock.services.exceptions.CustomObjectNotFoundException;
+import com.kuniwake.julio.apimock.services.exceptions.MyObjectNotFoundException;
+import com.kuniwake.julio.apimock.services.exceptions.MyDataIntegratyViolationException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(Integer id) {
         Optional<User> user = userRepository.findById(id);
-        return user.orElseThrow(() -> new CustomObjectNotFoundException("Objeto não encontrado"));
+        return user.orElseThrow(() -> new MyObjectNotFoundException("Objeto não encontrado"));
     }
 
     @Override
@@ -34,7 +35,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(UserDto userDto) {
+        findByEmail(userDto);
         return userRepository.save(mapper.map(userDto, User.class)); //Sempre salva a Entidade User e não o UserDto
+    }
+
+    private void findByEmail(UserDto userDto){
+        Optional<User> optionalUser = userRepository.findByEmail(userDto.getEmail());
+        if (optionalUser.isPresent()){ // Tratamento de exception no DB
+            throw new MyDataIntegratyViolationException("Email Já Cadastrado no Sistema");
+        }
     }
 
 
