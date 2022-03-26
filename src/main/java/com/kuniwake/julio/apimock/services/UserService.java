@@ -5,10 +5,12 @@ import com.kuniwake.julio.apimock.domain.dto.UserDto;
 
 import java.util.List;
 
-public interface UserService {
+public interface UserService { // Classe que Faz 'Contratos'
     User findById(Integer id);
 
     List<User> findAllUser();
 
     User createUser(UserDto userDto);
+
+    User updateUser(UserDto userDto);
 }
