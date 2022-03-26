@@ -1,9 +1,12 @@
 package com.kuniwake.julio.apimock.resource;
 
 import com.kuniwake.julio.apimock.domain.User;
+import com.kuniwake.julio.apimock.domain.dto.UserDto;
 import com.kuniwake.julio.apimock.services.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,10 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserResource {
 
     @Autowired
+    private ModelMapper mapper;
+
+    @Autowired
     private UserService userService;
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<User> findById(@PathVariable Integer id){
-        return ResponseEntity.ok().body(userService.findById(id));
+    public ResponseEntity<UserDto> findById(@PathVariable Integer id){
+        return ResponseEntity.ok().body(mapper.map(userService.findById(id), UserDto.class));// mapper.map(), faz com que as informações do User seja informada no UserDto
     }
 }
