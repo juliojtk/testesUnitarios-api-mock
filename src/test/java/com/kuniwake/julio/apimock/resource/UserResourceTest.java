@@ -107,8 +107,8 @@ class UserResourceTest {
         ResponseEntity<UserDto> response = userResource.updateUser(ID, userDto);
 
         Assertions.assertNotNull(response);
-        Assertions.assertNotNull(response.getBody());
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertNotNull(response.getBody());
         Assertions.assertEquals(ResponseEntity.class, response.getClass());
         Assertions.assertEquals(UserDto.class, response.getBody().getClass());
 
@@ -120,7 +120,16 @@ class UserResourceTest {
     }
 
     @Test
-    void deleteUser() {
+    void when_delete_then_return_success() {
+        Mockito.doNothing().when(userService).deleteUser(Mockito.anyInt()); // doNothing() é quando o metodo não possui return
+
+        ResponseEntity<UserDto>  response = userResource.deleteUser(ID);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        Assertions.assertEquals(ResponseEntity.class, response.getClass());
+        Mockito.verify(userService, Mockito.times(1)).deleteUser(Mockito.anyInt());
+
     }
 
     private void startUser(){ // Para não iniciar os valores da instancia de Usuario
