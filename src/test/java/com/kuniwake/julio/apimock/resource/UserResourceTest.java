@@ -3,14 +3,17 @@ package com.kuniwake.julio.apimock.resource;
 import com.kuniwake.julio.apimock.domain.User;
 import com.kuniwake.julio.apimock.domain.dto.UserDto;
 import com.kuniwake.julio.apimock.services.impl.UserServiceImpl;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,7 +46,21 @@ class UserResourceTest {
     }
 
     @Test
-    void findById() {
+    void when_findById_then_return_success() {
+        Mockito.when(userService.findById(Mockito.anyInt())).thenReturn(user);
+        Mockito.when(mapper.map(Mockito.any(), Mockito.any())).thenReturn(userDto);
+
+        ResponseEntity<UserDto> response = userResource.findById(ID);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertNotNull(response.getBody());
+        Assertions.assertEquals(ResponseEntity.class, response.getClass());
+        Assertions.assertEquals(UserDto.class, response.getBody().getClass());
+
+        Assertions.assertEquals(ID, response.getBody().getId());
+        Assertions.assertEquals(NAME, response.getBody().getName());
+        Assertions.assertEquals(EMAIL, response.getBody().getEmail());
+        Assertions.assertEquals(PASSWORD, response.getBody().getPassword());
     }
 
     @Test
