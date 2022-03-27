@@ -52,7 +52,7 @@ class UserServiceImplTest {
         startUser();
     }
 
-    @Test
+    @Test // FindById Success Instance
     void when_findById_then_return_userInstance() {
         Mockito.when(userRepository.findById(Mockito.anyInt())).thenReturn(optionalUser);
 
@@ -65,7 +65,7 @@ class UserServiceImplTest {
         assertEquals(EMAIL, response.getEmail());
     }
 
-    @Test
+    @Test // FindById Exception
     void when_findById_then_return_NotFoundException(){ // Quando buscar por Id, retornar NotFoundException
         Mockito.when(userRepository.findById(Mockito.anyInt()))
                 .thenThrow(new MyObjectNotFoundException(OBJETO_NAO_ENCONTRADO));
@@ -77,8 +77,8 @@ class UserServiceImplTest {
         }
     }
 
-    @Test
-    void when_find_all_return_ListOfUser() {
+    @Test // FindAllUser
+    void when_find_all_return_ListUser() {
         Mockito.when(userRepository.findAll()).thenReturn(List.of(user));
 
         List<User> response = userService.findAllUser();
@@ -92,7 +92,7 @@ class UserServiceImplTest {
         Assertions.assertEquals(PASSWORD, response.get(0).getPassword());
     }
 
-    @Test
+    @Test // Create Success
     void when_create_then_return_success() {
         Mockito.when(userRepository.save(Mockito.any())).thenReturn(user);
 
@@ -105,7 +105,7 @@ class UserServiceImplTest {
         Assertions.assertEquals(EMAIL, respose.getEmail());
     }
 
-    @Test
+    @Test // Create Exception
     void when_create_then_return_data_integrity_violation_exception() {
         Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(optionalUser);
 
@@ -119,8 +119,32 @@ class UserServiceImplTest {
 
     }
 
-    @Test
-    void updateUser() {
+    @Test // Update Success
+    void when_update_then_retunr_success() {
+        Mockito.when(userRepository.save(Mockito.any())).thenReturn(user);
+
+        User respose = userService.updateUser(userDto);
+
+        Assertions.assertNotNull(respose);
+        Assertions.assertEquals(User.class, respose.getClass());
+        Assertions.assertEquals(ID, respose.getId());
+        Assertions.assertEquals(NAME, respose.getName());
+        Assertions.assertEquals(EMAIL, respose.getEmail());
+    }
+
+    @Test // Update Exception
+    void when_update_then_return_data_integrity_violation_exception() {
+        Mockito.when(userRepository.findByEmail(Mockito.anyString()))
+                .thenThrow(new MyDataIntegratyViolationException("Email Já Cadastrado no Sistema"));
+
+        try {
+            optionalUser.get().setId(2); // Trocando o Id para verificar se esse usuario é diferente, caso seja diferente é Create senão é update
+            userService.createUser(userDto);
+        }catch (Exception ex){
+            Assertions.assertEquals(MyDataIntegratyViolationException.class, ex.getClass());
+            Assertions.assertEquals("Email Já Cadastrado no Sistema", ex.getMessage());
+        }
+
     }
 
     @Test
