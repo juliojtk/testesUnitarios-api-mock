@@ -88,7 +88,15 @@ class UserResourceTest {
     }
 
     @Test
-    void createUser() {
+    void when_createUser_then_return_created_status() {
+        Mockito.when(userService.createUser(Mockito.any())).thenReturn(user);
+
+        ResponseEntity<UserDto> response = userResource.createUser(userDto);
+
+        Assertions.assertEquals(ResponseEntity.class, response.getClass());
+        Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        Assertions.assertNotNull(response.getHeaders().get("Location")); // No Header tem que haver o Location
+
     }
 
     @Test
