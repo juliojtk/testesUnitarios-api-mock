@@ -3,6 +3,7 @@ package com.kuniwake.julio.apimock.services.impl;
 import com.kuniwake.julio.apimock.domain.User;
 import com.kuniwake.julio.apimock.domain.dto.UserDto;
 import com.kuniwake.julio.apimock.repositories.UserRepository;
+import com.kuniwake.julio.apimock.services.exceptions.MyDataIntegratyViolationException;
 import com.kuniwake.julio.apimock.services.exceptions.MyObjectNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -92,7 +93,30 @@ class UserServiceImplTest {
     }
 
     @Test
-    void createUser() {
+    void when_create_then_return_success() {
+        Mockito.when(userRepository.save(Mockito.any())).thenReturn(user);
+
+        User respose = userService.createUser(userDto);
+
+        Assertions.assertNotNull(respose);
+        Assertions.assertEquals(User.class, respose.getClass());
+        Assertions.assertEquals(ID, respose.getId());
+        Assertions.assertEquals(NAME, respose.getName());
+        Assertions.assertEquals(EMAIL, respose.getEmail());
+    }
+
+    @Test
+    void when_create_then_return_data_integrity_violation_exception() {
+        Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(optionalUser);
+
+        try {
+            optionalUser.get().setId(2); // Trocando o Id para verificar se esse usuario é diferente, caso seja diferente é Create senão é update
+            userService.createUser(userDto);
+        }catch (Exception ex){
+            Assertions.assertEquals(MyDataIntegratyViolationException.class, ex.getClass());
+            Assertions.assertEquals("Email Já Cadastrado no Sistema", ex.getMessage());
+        }
+
     }
 
     @Test
