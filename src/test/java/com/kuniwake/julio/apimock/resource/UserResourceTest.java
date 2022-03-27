@@ -13,8 +13,10 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,6 +28,7 @@ class UserResourceTest {
     public static final String NAME = "julio";
     public static final String EMAIL = "julio@email.com";
     public static final String PASSWORD = "123";
+    public static final int INDEX = 0;
 
     @InjectMocks
     private UserResource userResource;
@@ -64,7 +67,24 @@ class UserResourceTest {
     }
 
     @Test
-    void findAll() {
+    void when_findAll_then_return_listUserDto() {
+        Mockito.when(userService.findAllUser()).thenReturn(List.of(user));
+        Mockito.when(mapper.map(Mockito.any(), Mockito.any())).thenReturn(userDto);
+
+        ResponseEntity<List<UserDto>> response = userResource.findAll();
+
+        Assertions.assertNotNull(response);
+        Assertions.assertNotNull(response.getBody());
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(ResponseEntity.class, response.getClass());
+        Assertions.assertEquals(ArrayList.class, response.getBody().getClass()); // Testando se o retorno da chamada vai ser um Array
+        Assertions.assertEquals(UserDto.class, response.getBody().get(INDEX).getClass()); // Verificando se a classe que esta no indice 0 é do tipo UserDto
+
+        Assertions.assertEquals(ID, response.getBody().get(INDEX).getId());
+        Assertions.assertEquals(NAME, response.getBody().get(INDEX).getName());
+        Assertions.assertEquals(EMAIL, response.getBody().get(INDEX).getEmail());
+        Assertions.assertEquals(PASSWORD, response.getBody().get(INDEX).getPassword());
+
     }
 
     @Test
