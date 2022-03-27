@@ -5,6 +5,7 @@ import com.kuniwake.julio.apimock.domain.dto.UserDto;
 import com.kuniwake.julio.apimock.repositories.UserRepository;
 import com.kuniwake.julio.apimock.services.exceptions.MyDataIntegratyViolationException;
 import com.kuniwake.julio.apimock.services.exceptions.MyObjectNotFoundException;
+import org.hibernate.ObjectNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -148,7 +149,23 @@ class UserServiceImplTest {
     }
 
     @Test
-    void deleteUser() {
+    void when_delete_then_return_success() {
+        Mockito.when(userRepository.findById(Mockito.anyInt())).thenReturn(optionalUser);
+        userService.deleteUser(ID);
+
+        Mockito.verify(userRepository, Mockito.times(1)).findById(Mockito.anyInt());
+    }
+
+    @Test
+    void when_delete_with_objectNotDounException(){
+        Mockito.when(userRepository.findById(Mockito.anyInt()))
+                .thenThrow(new MyObjectNotFoundException(OBJETO_NAO_ENCONTRADO));
+        try{
+            userService.deleteUser(ID);
+        }catch (Exception ex){
+            Assertions.assertEquals(OBJETO_NAO_ENCONTRADO, ex.getMessage());
+            Assertions.assertEquals(MyObjectNotFoundException.class, ex.getClass());
+        }
     }
 
     private void startUser(){ // Para não iniciar os valores da instancia de Usuario
