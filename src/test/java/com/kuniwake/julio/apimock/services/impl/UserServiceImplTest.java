@@ -3,9 +3,8 @@ package com.kuniwake.julio.apimock.services.impl;
 import com.kuniwake.julio.apimock.domain.User;
 import com.kuniwake.julio.apimock.domain.dto.UserDto;
 import com.kuniwake.julio.apimock.repositories.UserRepository;
-import com.kuniwake.julio.apimock.services.exceptions.MyDataIntegratyViolationException;
+import com.kuniwake.julio.apimock.services.exceptions.MyDataIntegrityViolationException;
 import com.kuniwake.julio.apimock.services.exceptions.MyObjectNotFoundException;
-import org.hibernate.ObjectNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +15,6 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -114,7 +112,7 @@ class UserServiceImplTest {
             optionalUser.get().setId(2); // Trocando o Id para verificar se esse usuario é diferente, caso seja diferente é Create senão é update
             userService.createUser(userDto);
         }catch (Exception ex){
-            Assertions.assertEquals(MyDataIntegratyViolationException.class, ex.getClass());
+            Assertions.assertEquals(MyDataIntegrityViolationException.class, ex.getClass());
             Assertions.assertEquals("Email Já Cadastrado no Sistema", ex.getMessage());
         }
 
@@ -136,13 +134,13 @@ class UserServiceImplTest {
     @Test // Update Exception
     void when_update_then_return_data_integrity_violation_exception() {
         Mockito.when(userRepository.findByEmail(Mockito.anyString()))
-                .thenThrow(new MyDataIntegratyViolationException("Email Já Cadastrado no Sistema"));
+                .thenThrow(new MyDataIntegrityViolationException("Email Já Cadastrado no Sistema"));
 
         try {
             optionalUser.get().setId(2); // Trocando o Id para verificar se esse usuario é diferente, caso seja diferente é Create senão é update
             userService.createUser(userDto);
         }catch (Exception ex){
-            Assertions.assertEquals(MyDataIntegratyViolationException.class, ex.getClass());
+            Assertions.assertEquals(MyDataIntegrityViolationException.class, ex.getClass());
             Assertions.assertEquals("Email Já Cadastrado no Sistema", ex.getMessage());
         }
 
