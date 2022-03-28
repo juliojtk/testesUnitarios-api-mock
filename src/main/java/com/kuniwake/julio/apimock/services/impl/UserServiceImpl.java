@@ -5,7 +5,7 @@ import com.kuniwake.julio.apimock.domain.dto.UserDto;
 import com.kuniwake.julio.apimock.repositories.UserRepository;
 import com.kuniwake.julio.apimock.services.UserService;
 import com.kuniwake.julio.apimock.services.exceptions.MyObjectNotFoundException;
-import com.kuniwake.julio.apimock.services.exceptions.MyDataIntegratyViolationException;
+import com.kuniwake.julio.apimock.services.exceptions.MyDataIntegrityViolationException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
     private void findByEmail(UserDto userDto){
         Optional<User> optionalUser = userRepository.findByEmail(userDto.getEmail());
         if (optionalUser.isPresent() && !optionalUser.get().getId().equals(userDto.getId())){ // Tratamento de exception no DB
-            throw new MyDataIntegratyViolationException("Email Já Cadastrado no Sistema");
+            throw new MyDataIntegrityViolationException("Email Já Cadastrado no Sistema");
         }
     }
 

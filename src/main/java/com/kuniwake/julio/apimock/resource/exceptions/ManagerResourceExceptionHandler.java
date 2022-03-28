@@ -1,6 +1,6 @@
 package com.kuniwake.julio.apimock.resource.exceptions;
 
-import com.kuniwake.julio.apimock.services.exceptions.MyDataIntegratyViolationException;
+import com.kuniwake.julio.apimock.services.exceptions.MyDataIntegrityViolationException;
 import com.kuniwake.julio.apimock.services.exceptions.MyObjectNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +23,8 @@ public class ManagerResourceExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
-    @ExceptionHandler(MyDataIntegratyViolationException.class)
-    public ResponseEntity<ManagerStandardError> dataIntegratViolation(MyDataIntegratyViolationException ex, HttpServletRequest request){
+    @ExceptionHandler(MyDataIntegrityViolationException.class)
+    public ResponseEntity<ManagerStandardError> dataIntegrityViolation(MyDataIntegrityViolationException ex, HttpServletRequest request){
         ManagerStandardError error = new ManagerStandardError(
                 LocalDate.now(),
                 HttpStatus.BAD_REQUEST.value(),

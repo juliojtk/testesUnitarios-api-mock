@@ -1,9 +1,9 @@
 package com.kuniwake.julio.apimock.services.exceptions;
 
-public class MyDataIntegratyViolationException extends RuntimeException{
+public class MyDataIntegrityViolationException extends RuntimeException{
 
     //Exceção de Violação de Integridade com o Banco de Dados
-    public MyDataIntegratyViolationException(String message) {
+    public MyDataIntegrityViolationException(String message) {
         super(message);
     }
 }
