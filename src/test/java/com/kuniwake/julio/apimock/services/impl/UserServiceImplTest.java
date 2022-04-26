@@ -166,6 +166,39 @@ class UserServiceImplTest {
         }
     }
 
+    @Test // OBSERVAÇÕES, TODOS AS ASSERTIVAS POSSUEM AS NEGAÇOES EX: assertNotEquals assertNotSame
+    public void tiposDeAsserts(){
+        // True ou False
+        Assertions.assertTrue(true);
+        Assertions.assertFalse(false);
+
+        // Inteiros e Floot
+        Assertions.assertEquals(1, 1);
+        Assertions.assertEquals(0.51234, 0.512, 0.001); // 0.001 é a margem de erro, quando usa doble
+        Assertions.assertEquals(Math.PI, 3.14, 0.01);
+
+        // Comparação tipos Primitivos
+        int i = 5;
+        Integer i2 = 5;
+        Assertions.assertEquals( Integer.valueOf(i), i2);
+        Assertions.assertEquals(i, i2.intValue());
+
+        // Strings
+        Assertions.assertEquals("carro", "carro");
+        Assertions.assertTrue("carro".equalsIgnoreCase("Carro"));
+        Assertions.assertTrue("carro".startsWith("car"));
+
+        User u1 = new User(1, "julio", "julio@email", "123");
+        User u2 = new User(1, "julio", "julio@email", "123");
+        User u3 = null;
+        Assertions.assertEquals(u1, u2);
+        Assertions.assertSame(u1, u1); //assertSame se usa quando a instancia do objeto é a mesma
+        Assertions.assertNotSame(u1, u2);
+        Assertions.assertNull(u3);
+        Assertions.assertNotNull(u1);
+
+    }
+
     private void startUser(){ // Para não iniciar os valores da instancia de Usuario
         user = User.builder().id(ID).name(NAME).email(EMAIL).password(PASSWORD).build();
         userDto = UserDto.builder().id(ID).name(NAME).email(EMAIL).password(PASSWORD).build();
